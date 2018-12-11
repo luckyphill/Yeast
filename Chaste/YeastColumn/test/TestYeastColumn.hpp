@@ -52,7 +52,7 @@ class TestYeastColumn : public AbstractCellBasedTestSuite
 
 		double end_time = 10;
 		
-		double sampling_multiple = 10;
+		double sampling_multiple = 1;
 
 		double maxInteractionRadius = 2.0;
 
@@ -94,9 +94,9 @@ class TestYeastColumn : public AbstractCellBasedTestSuite
 		p_wnt->SetCellPopulation(cell_population);
 
 
-		OffLatticeSimulation simulator(cell_population);
+		OffLatticeSimulation<2> simulator(cell_population);
 
-		simulator.SetOutputDirectory('TestColumnFixedNutrientGradient');
+		simulator.SetOutputDirectory("TestColumnFixedNutrientGradient");
 
 		simulator.SetEndTime(end_time);
 		simulator.SetDt(dt);
