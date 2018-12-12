@@ -9,12 +9,14 @@ Created by Phill for the YeastColumn project
 #include "Debug.hpp"
 
 NutrientBasedCellCycleModel::NutrientBasedCellCycleModel()
-    : AbstractSimpleCellCycleModel()
+    : AbstractSimpleCellCycleModel(),
+    mDt(DOUBLE_UNSET)
 {
 }
 
 NutrientBasedCellCycleModel::NutrientBasedCellCycleModel(const NutrientBasedCellCycleModel& rModel)
-   : AbstractSimpleCellCycleModel(rModel)
+   : AbstractSimpleCellCycleModel(rModel),
+   mDt(rModel.mDt)
 {
 
 }
@@ -35,18 +37,27 @@ bool NutrientBasedCellCycleModel::ReadyToDivide()
     // Random number
     // Wnt concentration
     // If random number < WntConcentration and age > 1 then divide
-    PRINT_VARIABLE(0.1 * WntConcentration<2>::Instance()->GetWntLevel(mpCell))
-    PRINT_VARIABLE(mpCell->GetCellId())
-    if (RandomNumberGenerator::Instance()->ranf() < 0.1 * WntConcentration<2>::Instance()->GetWntLevel(mpCell) && mpCell->GetAge() > 1 )
+    
+    if (RandomNumberGenerator::Instance()->ranf() < GetSimulationDt() * WntConcentration<2>::Instance()->GetWntLevel(mpCell) && mpCell->GetAge() > 1 )
     {   
-        TRACE("Yes divide")
         mReadyToDivide = true;
     } else 
     {
-        TRACE("No divide")
+        mReadyToDivide = false;
     }
 
     return mReadyToDivide;
+}
+
+double NutrientBasedCellCycleModel::GetSimulationDt()
+{
+    assert(mDt != DOUBLE_UNSET);
+    return mDt;
+}
+
+void NutrientBasedCellCycleModel::SetSimulationDt(double dt)
+{
+    mDt = dt;
 }
 
 double NutrientBasedCellCycleModel::GetAverageTransitCellCycleTime()

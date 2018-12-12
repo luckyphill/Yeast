@@ -12,18 +12,16 @@ Created by Phill for the YeastColumn project
 #include "WntConcentration.hpp"
 
 /**
- * A stochastic cell-cycle model where cells divide with a stochastic cell cycle duration
- * with the length of the cell cycle drawn from a uniform distribution
- * on [mMinCellCycleDuration, mMaxCellCycleDuration].
+ * A stochastic cell-cycle model where cells divide with probability dependent on the nutrient concentration
  *
- * If the cell is differentiated, then the cell cycle duration is set to be infinite,
- * so that the cell will never divide.
+ * 
  */
 class NutrientBasedCellCycleModel : public AbstractSimpleCellCycleModel
 {
     friend class TestSimpleCellCycleModels;
 
 private:
+
 
     /** Needed for serialization. */
     friend class boost::serialization::access;
@@ -63,6 +61,8 @@ protected:
 
 public:
 
+    double mDt = DOUBLE_UNSET;
+
     /**
      * Constructor - just a default, mBirthTime is set in the AbstractCellCycleModel class.
      */
@@ -82,7 +82,11 @@ public:
     AbstractCellCycleModel* CreateCellCycleModel();
 
     // Overridden method
-    bool ReadyToDivide();
+    virtual bool ReadyToDivide();
+
+    double GetSimulationDt();
+
+    void SetSimulationDt(double dt);
 
     /**
      * Overridden GetAverageTransitCellCycleTime() method.
